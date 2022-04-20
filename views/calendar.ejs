@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <!-- <script type="module" src="js/calendar.js" defer></script> -->
+    
+    <script
+      src="https://kit.fontawesome.com/5f930e1839.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <title>Daniel Jerzyna ze Szczenia</title>
+  </head>
+
+
+  <body>
+
+    <%- include('includes/info.ejs') %>
+  
+    <% if(isKieras) { %> 
+      <header class="main-header">
+        <nav class="main-header__nav">
+          <ul class="main-header__item-list">
+            <li class="main-header__item">
+              <a href="/calendar/?page=0"> Kalendarz</a>
+            </li>
+  
+            <li class="main-header__item">
+              <a href="/kieras"> Kieras </a>
+            </li>
+  
+            <li class="main-header__item">
+              <form id="form-logout" action="/logout" method="post">
+                <button id="btn-logout" type="submit">Logout</button>
+              </form>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <% } else { %>
+
+
+      <header class="main-header">
+        <nav class="main-header__nav">
+          <ul class="main-header__item-list">
+            <li class="main-header__item">
+              <a href="/calendar/?page=0"> Calendar</a>
+            </li>
+  
+            <li class="main-header__item">
+              <a href="javascript:history.back()"> Wizyty </a>
+            </li>
+  
+            <li class="main-header__item">
+              <form id="form-logout" action="/logout" method="post">
+                <button id="btn-logout" type="submit">Logout</button>
+              </form>
+            </li>
+  
+          </ul>
+        </nav>
+      </header>
+    <% } %>
+    
+
+    <div class = "paginationDiv">
+  
+    <section class="pagination"> 
+      <a href="/calendar/?page=0">Styczeń</a>
+      <a href="/calendar/?page=1">Luty</a>
+      <a href="/calendar/?page=2">Marzec</a>
+      <a href="/calendar/?page=3">Kwiecień</a>
+      <a href="/calendar/?page=4">Maj</a>
+      <a href="/calendar/?page=5">Czerwiec</a>
+      <a href="/calendar/?page=6">Lipiec</a>
+      <a href="/calendar/?page=7">Sierpień</a>
+      <a href="/calendar/?page=8">Wrzesień</a>
+      <a href="/calendar/?page=9">Październik</a>
+      <a href="/calendar/?page=10">Listopad</a>
+      <a href="/calendar/?page=11">Grudzień</a>
+    </section>
+
+  </div>
+
+  <div class="calosc">
+
+
+  
+    <section class="app">
+
+      <div class="data">
+        <div class="miesiac-nazwa-box">
+          <!-- <i id="arrow left"> &lt;&lt;&nbsp; </i> -->
+          <p class="miesiac-nazwa-p"> <%= months %> </p>
+          <!-- <i id="arrow right"> &nbsp;&gt;&gt; </i> -->
+        </div>
+
+        <div class="miesiac-widok">
+          <% if( days.length > 0) { %>
+          <% if(days[0].getDay() > 0) {  %>
+            <% for( let i=0 ; i <days[0].getDay()-1 ; i++) { %>
+          <div class="dzien invi">aaa</div>
+           <% } %>
+
+          <% } else { %>
+
+            <% for( let i=0 ; i <6 ; i++) { %>
+              <div class="dzien invi">aaa</div>
+           <% } %>
+
+            <% } %>
+
+          <% } %>
+              
+          <% for (let day of days) { %>
+          <div class="dzien">
+            <div class="dzien-dane">
+              <p class="dzien-nazwa"> <%= day.toLocaleString('pl', { weekday: 'long' }) %></p>
+              <p class="dzien-data"> <%= day.getDate() %></p>
+            </div>
+
+            <% for (let worker of workers) { %>
+              <% if(worker.wizyty.map(e =>e.data.getDate()).includes(day.getDate())) { %>
+
+            <div class="wizyta"> 
+              <div class="wizyta-kolor">
+                <div class="kwadratLegenda1"
+                style="background-color: <%= worker.color %>" > </div>
+              </div>
+              <div class="wizyta-osoba"><%= (worker.wizyty.filter((obj) => { return obj.data.getDate() == day.getDate()}))[0].klient %> </div>
+            </div> 
+
+            <% } %>
+            <% } %>
+
+          </div>
+          
+          <% } %>
+         
+        </div>
+      </div>
+
+      <div class="legenda">
+        <p class="legenda-napis">LEGENDA</p>
+
+        <div class="legenda-handlowcy"> 
+              
+            <% if(workers.length > 0) { %>
+         
+            <% for ( let worker of workers) { %> 
+             
+
+          <div class="pracownik"> 
+            <div class="legenda-kolor">
+              <div class="kwadratLegenda" style="background-color:<%= worker.color %>"></div>
+            </div>
+            <div class="legenda-dane"><%= worker.imie %> <%= worker.nazwisko %></div>
+          </div>
+           
+              <% } %>
+            
+        <% } %> 
+     
+      </div>
+    </section>
+
+    <% if(isKieras) { %>
+
+    <section class="nieroby">
+      <p class="legenda-napis nieroby-napis">Details</p>
+      <div class="nieroby-lista">
+      <% for (let day of days) { %>
+        <% if (day.getDay() == 0 || day.getDay() == 6 ) { %>
+      <div class="spinka">
+      <div class="dzienpracujacy"><%= day.getDate() %></div>
+      <div class="listanierobow"> Weekend
+      </div> 
+      </div>
+      <% } else { %>
+      <div class="spinka">
+      <div class="dzienpracujacy"><%= day.getDate() %></div>
+      <div class="listanierobow"> 
+        <% for (let worker of workers) { %>
+          <% if(!worker.wizyty.map(e =>e.data.getDate()).includes(day.getDate())) { %>
+        <div class="kwadratLegenda" style="background-color:<%= worker.color %>"></div>
+       <% } %>
+        <% } %>
+      </div> 
+      </div>
+      <% } %>
+      <% } %>
+    </div>   
+    </section>
+    <% } %>
+    
+  </div>
+  </body>
+</html>

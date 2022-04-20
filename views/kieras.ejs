@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/kieras.css" />
+    <script src="js/kieras.js" defer></script>
+    <title><%= pageTitle %></title>
+  </head>
+  <body>
+    <%- include('./includes/info.ejs') %>
+    
+    <header class="main-header">
+      <nav class="main-header__nav">
+        <ul class="main-header__item-list">
+          <li class="main-header__item">
+            <a href="/calendar/?page=0"> Calendar</a>
+          </li>
+
+          <li class="main-header__item">
+            <a href="/kieras"> Kieras </a>
+          </li>
+
+          <li class="main-header__item">
+            <form id="form-logout" action="/logout" method="post">
+              <button id="btn-logout" type="submit">Logout</button>
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <% if (errorMessage) { %>
+    <div class="user-message user-message--error"><%= errorMessage %></div>
+    <% } %> <% if (inputMessage) { %>
+    <div class="user-message user-message--error"><%= inputMessage %></div>
+    <% } %>
+
+    <div class="srodek">
+      <form method="POST" action="/kieras">
+        <div class="form-control">
+          <label for="imie">Imie&nbsp </label>
+          <input type="text" name="imie" id="imie" value="" />
+        </div>
+        <div class="form-control">
+          <label for="imie">Nazwisko&nbsp </label>
+          <input type="text" name="nazwisko" id="nazwisko" />
+        </div>
+        <div class="form-control kolorek">
+          <label>Kolor </label>
+          <input type="text" class="nazwakoloru" name="kolor" />
+          <!-- <div class="nazwakoloru" name="kolor"></div> -->
+        </div>
+        <div class="form-control colorgenerator">
+          <button type="button" class="btn btn-hero" id="kolorgenerator">
+            Wygeneruj kolor
+          </button>
+          <div id="kolorBox"></div>
+        </div>
+        <button type="submit" id="dodaj">Dodaj Pracownika</button>
+      </form>
+
+      <section id="pracownicy">
+        <div class="workerader">Pracownicy</div>
+        <% if (workers.length > 0) { %> <% for (let worker of workers) { %>
+        <div class="pojedyczny">
+          <div class="pobierzkolor">
+            <div
+              class="kwadratKolor"
+              style="background-color: <%= worker.color %>"
+            ></div>
+          </div>
+
+          <div class="pobierzImie"><%= worker.imie %></div>
+
+          <div class="pobierzNazwisko"><%= worker.nazwisko %></div>
+
+          <form action="/kieras/usun/" class="usun" method="post">
+            <button class="button" name="id" value="<%= worker._id%>">
+              Usuń
+            </button>
+          </form>
+        </div>
+        
+        <% } %> <% } %>
+      </section>
+    </div>
+  </body>
+</html>

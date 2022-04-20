@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/kieras.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <%- include('./includes/info.ejs') %>
+    <header class="main-header">
+      <nav class="main-header__nav">
+        <ul class="main-header__item-list">
+          <li class="main-header__item">
+            <a href="/calendar/?page=0"> Kalendarz</a>
+          </li>
+
+          <li class="main-header__item">
+            <a href="/worker/<%= worker.nazwisko %>"> Wizyty </a>
+          </li>
+
+          <li class="main-header__item">
+            <form id="form-logout" action="/logout" method="post">
+              <button id="btn-logout" type="submit">Logout</button>
+            </form>
+          </li>
+
+          <!-- <li class="main-header__item">
+            <a id="displayNav" name="nazwiskoMisia"></a>
+          </li> -->
+        </ul>
+      </nav>
+    </header>
+
+    <% if (errorMessage) { %>
+    <div class="user-message user-message--error"><%= errorMessage %></div>
+
+    <% } %> <% if (errorDzien) { %>
+    <div class="user-message user-message--error"><%= errorDzien %></div>
+
+    <% } %>
+
+    <div class="srodek srodek-gowna">
+      <form class="formaWizyta" action="/worker" method="POST">
+        <div class="form-control invi">
+          <label for="klient"></label>
+          <input
+            type="text"
+            name="nazwisko"
+            id=""
+            value="<%= worker.nazwisko %>"
+          />
+        </div>
+
+        <div class="form-control">
+          <label for="klient">Klient</label>
+          <input type="text" name="klient" id="klient" value="" />
+        </div>
+
+        <div class="form-control">
+          <label for="start">Data</label>
+
+          <input
+            type="date"
+            id="dataWizyty"
+            name="year"
+            value="2022-01-01"
+            min="2022-01-01"
+            max="2018-11-31"
+          />
+        </div>
+
+        <button type="submit" id="dodajWizyte">Dodaj Wizyte</button>
+      </form>
+
+      <div class="tabelaWizyt">
+        <div class="spisWizyt">Zaplanowane wizyty</div>
+        <% if (worker) { %> <% for (let wizyta of worker.wizyty) { %>
+        <div class="wizytaDiv">
+          <div id="klientWizyta"><%= wizyta.klient %></div>
+          <div id="dzienWizyta">
+            <%= wizyta.data.getDate() %> <%=
+            wizyta.data.toLocaleString('default', { month: 'long' }) %>
+          </div>
+          <form action="/worker/usun" class="usunWizyta" method="post">
+            <input
+              type="text"
+              class="invi"
+              name="nazwisko"
+              id=""
+              value="<%= worker.nazwisko %>"
+            />
+            <button class="button" name="idWizyta" value="<%= wizyta._id %>">
+              Usuń
+            </button>
+          </form>
+        </div>
+
+        <% } %> <% } %>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/loginkieras.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <%- include('./includes/info.ejs') %>
+     <% if (errorMessage) { %>
+    <div class="user-message user-message--error"><%= errorMessage %></div>
+    <% } %>
+
+    <div class="wrap">
+      <div class="loginBox">
+        <form class="login" method="post">
+          <label for="imieKieras">Imie </label>
+          <input type="text" name="imieKieras" id="imieKieras" value="" />
+          <label for="emailKieras">E-mail </label>
+          <input type="text" name="emailKieras" id="emailKieras" value="" />
+          <label for="hasloKieras">Haslo </label>
+          <input type="password" name="hasloKieras" id="hasloKieras" value="" />
+          <button>Log In</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
